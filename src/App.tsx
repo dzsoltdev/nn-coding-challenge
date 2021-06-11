@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
+import {useLocalStorage} from 'react-use';
 import './App.css';
 
+import {AppSettingsContext, Theme, UnitType} from "./utility/appSettingsContext";
+
 function App() {
+  const [activeUnitType, setActiveUnitType] = useLocalStorage<UnitType>('active-unit-type', UnitType.METRIC);
+  const [activeTheme, setActiveTheme] = useLocalStorage<Theme>('active-theme', Theme.LIGHT);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppSettingsContext.Provider value={{
+      unitType: activeUnitType ?? UnitType.METRIC,
+      setUnitType: setActiveUnitType,
+      theme: activeTheme ?? Theme.LIGHT,
+      setTheme: setActiveTheme
+    }}>
+      <div className="App">
+        <header className="App-header">
+
+        </header>
+      </div>
+    </AppSettingsContext.Provider>
   );
 }
 
