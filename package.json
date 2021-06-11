@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "node-sass": "^6.0.0",
     "react-redux": "^7.2.4"
   }
 }

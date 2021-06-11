@@ -1,6 +1,7 @@
 import React from 'react';
 import {useLocalStorage} from 'react-use';
-import './App.css';
+import './App.scss';
+import classNames from "classnames";
 
 import {AppSettingsContext, Theme, UnitType} from "./utility/appSettingsContext";
 
@@ -15,8 +16,8 @@ function App() {
       theme: activeTheme ?? Theme.LIGHT,
       setTheme: setActiveTheme
     }}>
-      <div className="App">
-        <header className="App-header">
+      <div className={classNames('app', activeTheme?.toLowerCase())}>
+        <header className="app-header">
 
         </header>
       </div>
