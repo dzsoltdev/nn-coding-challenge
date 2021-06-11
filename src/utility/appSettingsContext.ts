@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
 
 export enum UnitType {
-  METRIC = 'METRIC',
-  IMPERIAL = 'IMPERIAL'
+  METRIC = 'metric',
+  IMPERIAL = 'imperial'
 }
 
 export enum Theme {
-  DARK = 'DARK',
-  LIGHT = 'LIGHT'
+  DARK = 'dark',
+  LIGHT = 'light'
 }
 
 export type AppSettingsContextType = {
