@@ -1,8 +1,10 @@
 import React, {useCallback} from "react";
 import classNames from "classnames";
+import "../styles/components/Widget.scss"
 
 import {useAppSettingsContext} from "../utility/appSettingsContext";
 
+//TODO lazy load components
 import LocalWeatherWidget from "./LocalWeatherWidget";
 import GlobalWeatherWidget from "./GlobalWeatherWidget";
 

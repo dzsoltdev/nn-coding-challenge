@@ -1,5 +1,6 @@
 import React from "react";
 import classNames from "classnames";
+import "../styles/components/WidgetContainer.scss"
 
 import Widget, {WidgetType} from "./Widget";
 

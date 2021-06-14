@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSessionStorage} from 'react-use';
-import './App.scss';
+import './styles/App.scss';
 import classNames from "classnames";
 
 import {AppSettingsContext, Theme, UnitType} from "./utility/appSettingsContext";
@@ -21,6 +21,7 @@ function App() {
     }}>
       <div className={classNames('app', activeTheme)}>
         <header className="app-header">
+          <label>NN Weather App</label>
         </header>
 
         <WidgetContainer />
