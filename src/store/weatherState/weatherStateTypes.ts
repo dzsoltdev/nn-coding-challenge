@@ -1,11 +1,15 @@
 import {DATA_STATE} from "../dataStateConstants";
 
 export interface WeatherState {
-  data: any,
-  dataState: DATA_STATE
+  localData: any,
+  localDataState: DATA_STATE
+  globalData: any,
+  globalDataState: DATA_STATE
 }
 
 export enum weatherActionTypes {
-  GET_WEATHER_DATA = "GET_WEATHER_DATA",
-  SET_WEATHER_DATA_STATE = "SET_WEATHER_DATA_STATE"
+  GET_LOCAL_WEATHER_DATA = "GET_LOCAL_WEATHER_DATA",
+  SET_LOCAL_WEATHER_DATA_STATE = "SET_LOCAL_WEATHER_DATA_STATE",
+  GET_GLOBAL_WEATHER_DATA = "GET_GLOBAL_WEATHER_DATA",
+  SET_GLOBAL_WEATHER_DATA_STATE = "SET_GLOBAL_WEATHER_DATA_STATE"
 }

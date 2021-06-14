@@ -12,7 +12,7 @@ const GlobalWeatherWidget = () => {
     getWeatherDataByCity(dispatch, {
       units: unitType
     });
-  }, []);
+  }, [unitType]);
 
   return <div>Global weather</div>
 };

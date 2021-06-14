@@ -12,7 +12,7 @@ const API_KEY = 'a23560fa3f2603966851cd344571833b';
 
 export const getWeatherDataByLocation = async (dispatch: Function, params: any) => {
   dispatch({
-    type: weatherActionTypes.SET_WEATHER_DATA_STATE,
+    type: weatherActionTypes.SET_LOCAL_WEATHER_DATA_STATE,
     payload: DATA_STATE.FETCHING
   });
 
@@ -21,12 +21,12 @@ export const getWeatherDataByLocation = async (dispatch: Function, params: any) 
 
   if(data) {
     dispatch({
-      type: weatherActionTypes.GET_WEATHER_DATA,
+      type: weatherActionTypes.GET_LOCAL_WEATHER_DATA,
       payload: data
     });
   } else {
     dispatch({
-      type: weatherActionTypes.SET_WEATHER_DATA_STATE,
+      type: weatherActionTypes.SET_LOCAL_WEATHER_DATA_STATE,
       payload: DATA_STATE.ERROR
     });
   }
@@ -34,23 +34,43 @@ export const getWeatherDataByLocation = async (dispatch: Function, params: any) 
 
 export const getWeatherDataByCity = async (dispatch: Function, params: any) => {
   dispatch({
-    type: weatherActionTypes.SET_WEATHER_DATA_STATE,
+    type: weatherActionTypes.SET_GLOBAL_WEATHER_DATA_STATE,
     payload: DATA_STATE.FETCHING
   });
 
-  // const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=Budapest,HU&units=${params.units}&appid=${API_KEY}`);
-  const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=Los Angeles,CA,US&units=${params.units}&appid=${API_KEY}`);
-  let data = response?.data;
+  let data: any;
 
-  if(data) {
+  Promise.all(cities.map((city: string) => {
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=${params.units}&appid=${API_KEY}`);
+  })).then((results: Array<any>) => {
+    data = results.reduce((acc: any, result: any, index: number) => {
+      let city = cities[index].split(',')[0];
+
+      return {
+        ...acc,
+        [city]: result.data
+      }
+    }, {});
+
+    if(data) {
+      dispatch({
+        type: weatherActionTypes.GET_GLOBAL_WEATHER_DATA,
+        payload: data
+      });
+    } else {
+      dispatch({
+        type: weatherActionTypes.SET_GLOBAL_WEATHER_DATA_STATE,
+        payload: DATA_STATE.ERROR
+      });
+    }
+  }).catch(() => {
     dispatch({
-      type: weatherActionTypes.GET_WEATHER_DATA,
-      payload: data
-    });
-  } else {
-    dispatch({
-      type: weatherActionTypes.SET_WEATHER_DATA_STATE,
+      type: weatherActionTypes.SET_GLOBAL_WEATHER_DATA_STATE,
       payload: DATA_STATE.ERROR
     });
-  }
+  });
 }
+
+const cities = [
+  'Los Angeles,CA,US', 'New York,NY,US', 'London,UK', 'Budapest,HU', 'Mumbai,IN', 'Tokio,JP'
+]

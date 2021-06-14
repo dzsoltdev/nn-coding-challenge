@@ -16,7 +16,7 @@ const LocalWeatherWidget = () => {
       lon: location.longitude,
       units: unitType
     })
-  }, [location.loading]);
+  }, [location.loading, unitType]);
 
   return <div>Local weather</div>
 };
