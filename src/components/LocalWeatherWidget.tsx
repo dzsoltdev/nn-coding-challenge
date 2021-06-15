@@ -1,14 +1,25 @@
 import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useGeolocation} from "react-use";
+import classNames from "classnames";
+import moment from "moment";
+
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {getWeatherDataByLocation} from "../store/weatherState/weatherActions";
 import {useAppSettingsContext} from "../utility/appSettingsContext";
+import {DATA_STATE} from "../store/dataStateConstants";
+import {formatTemperature} from "../utility/valueFormatter";
+
+import "../styles/components/WeatherWidget.scss"
 
 const LocalWeatherWidget = () => {
   const dispatch = useDispatch();
   const location = useGeolocation();
   const {unitType} = useAppSettingsContext();
+
+  const data = useSelector((state: any) => state.weather.localData);
+  const dataState = useSelector((state: any) => state.weather.localDataState);
 
   useEffect(() => {
     if(!location.loading) getWeatherDataByLocation(dispatch, {
@@ -18,7 +29,41 @@ const LocalWeatherWidget = () => {
     })
   }, [location.loading, unitType]);
 
-  return <div>Local weather</div>
+  return <div className={classNames('weather', 'local')}>
+    {dataState === DATA_STATE.FETCHING && <CircularProgress />}
+    {dataState === DATA_STATE.READY &&
+      <>
+        <div className={'current'}>
+          <span className={'value'}>{formatTemperature(data.current.temp, unitType)}</span>
+          <img className={'icon'} src={`http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`}/>
+          <span className={'description'}>{data.current.weather[0].description}</span>
+        </div>
+
+        <div>Forcast for the next 12 hours</div>
+        <div className={classNames('forecast', 'hourly')}>
+          {data.hourly.slice(1, 13).map((item: any) => (
+            <div key={`hourly-forecast-${item.dt}`} className={'forecast-item'}>
+              <span className={'time'}>{moment(item.dt * 1000).format('HH:mm')} </span>
+              <span className={'value'}>{formatTemperature(item.temp, unitType)}</span>
+              <img className={'icon'} src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}/>
+            </div>
+          ))}
+        </div>
+
+        <div>Forcast for the next 6 days</div>
+        <div className={classNames('forecast', 'daily')}>
+          {data.daily.slice(1, 7).map((item: any) => (
+            <div key={`daily-forecast-${item.dt}`} className={'forecast-item'}>
+              <span className={'time'}>{moment(item.dt * 1000).format('dddd')} </span>
+              <span className={'value'}>{formatTemperature(item.temp.max, unitType)}</span>
+              <span className={'value'}>{formatTemperature(item.temp.min, unitType)}</span>
+              <img className={'icon'} src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}/>
+            </div>
+          ))}
+        </div>
+      </>
+    }
+  </div>
 };
 
 export default LocalWeatherWidget
