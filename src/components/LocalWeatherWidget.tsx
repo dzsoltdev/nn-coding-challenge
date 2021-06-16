@@ -6,7 +6,7 @@ import moment from "moment";
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {getWeatherDataByCity, getWeatherDataByLocation} from "../store/weatherState/weatherActions";
+import {getWeatherDataByLocation} from "../store/weatherState/weatherActions";
 import {useAppSettingsContext} from "../utility/appSettingsContext";
 import {DATA_STATE} from "../store/dataStateConstants";
 import {formatTemperature} from "../utility/valueFormatter";
@@ -28,13 +28,15 @@ const LocalWeatherWidget = () => {
       lat: location.latitude,
       lon: location.longitude,
       units: unitType
-    })
+    });
   }, [location.loading, unitType]);
 
   const refreshWidget = () => {
-    getWeatherDataByCity(dispatch, {
+    getWeatherDataByLocation(dispatch, {
+      lat: location.latitude,
+      lon: location.longitude,
       units: unitType
-    });
+    }, true);
   }
 
   return <div className={classNames('weather', 'local')}>
@@ -48,6 +50,7 @@ const LocalWeatherWidget = () => {
           <span className={'value'}>{formatTemperature(data.current.temp, unitType)}</span>
           <img className={'icon'} src={`http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`}/>
           <span className={'description'}>{data.current.weather[0].description}</span>
+          <div>Last refresh: {moment(data.current.dt * 1000).format('HH:mm')}</div>
         </div>
 
         <div>Forcast for the next 12 hours</div>
