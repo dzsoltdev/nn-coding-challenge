@@ -21,11 +21,10 @@
 .weather {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &.local {
-    display: flex;
-    flex-direction: column;
-
     @include current-weather();
 
     .forecast {
@@ -71,8 +70,23 @@
       min-width: 100%;
       height: 100%;
       position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
 
       @include current-weather();
+      .current {
+        flex: 0;
+      }
     }
+  }
+
+  .loader-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 }

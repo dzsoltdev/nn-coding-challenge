@@ -15,7 +15,7 @@ import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
 import "../styles/components/modal.scss"
 
-const transitionDuration = 300;
+const transitionDuration = 500;
 const defaultCycleDuration = 5000;
 
 const defaultStyle: any = {
@@ -79,7 +79,7 @@ const GlobalWeatherWidget = () => {
   }
 
   return <div className={'weather global'}>
-    {dataState === DATA_STATE.FETCHING && <CircularProgress />}
+    {dataState === DATA_STATE.FETCHING && <div className={'loader-container'}><CircularProgress /></div>}
     {dataState === DATA_STATE.READY && <>
       <div className={'widget-controls'}>
         <span className={'icon'} onClick={handleOpen}><FontAwesomeIcon icon={faCog} size={'sm'}/></span>
@@ -112,7 +112,11 @@ const GlobalWeatherWidget = () => {
                    ...defaultStyle,
                    ...transitionStyles[state]
                  }}>
-              <label className={'title'}>{key}</label>
+              <div className={'title'}>
+                <h4>{key}</h4>
+                <div>Last refresh: {moment(item.dt * 1000).format('HH:mm')}</div>
+                <div>Local time: {moment((item.dt + item.timezone) * 1000).format('dddd HH:mm')}</div>
+              </div>
               <div className={'current'}>
                 <span className={'value'}>{formatTemperature(item.main.temp, unitType)}</span>
                 <img className={'icon'} src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}/>

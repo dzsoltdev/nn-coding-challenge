@@ -30,7 +30,7 @@ const LocalWeatherWidget = () => {
   }, [location.loading, unitType]);
 
   return <div className={classNames('weather', 'local')}>
-    {dataState === DATA_STATE.FETCHING && <CircularProgress />}
+    {dataState === DATA_STATE.FETCHING && <div className={'loader-container'}><CircularProgress /></div>}
     {dataState === DATA_STATE.READY &&
       <>
         <div className={'current'}>
