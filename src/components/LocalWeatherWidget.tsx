@@ -6,12 +6,14 @@ import moment from "moment";
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {getWeatherDataByLocation} from "../store/weatherState/weatherActions";
+import {getWeatherDataByCity, getWeatherDataByLocation} from "../store/weatherState/weatherActions";
 import {useAppSettingsContext} from "../utility/appSettingsContext";
 import {DATA_STATE} from "../store/dataStateConstants";
 import {formatTemperature} from "../utility/valueFormatter";
 
 import "../styles/components/WeatherWidget.scss"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
 const LocalWeatherWidget = () => {
   const dispatch = useDispatch();
@@ -29,10 +31,19 @@ const LocalWeatherWidget = () => {
     })
   }, [location.loading, unitType]);
 
+  const refreshWidget = () => {
+    getWeatherDataByCity(dispatch, {
+      units: unitType
+    });
+  }
+
   return <div className={classNames('weather', 'local')}>
     {dataState === DATA_STATE.FETCHING && <div className={'loader-container'}><CircularProgress /></div>}
     {dataState === DATA_STATE.READY &&
       <>
+        <div className={'widget-controls'}>
+          <span className={'icon'} onClick={refreshWidget}><FontAwesomeIcon icon={faSyncAlt} size={'sm'}/></span>
+        </div>
         <div className={'current'}>
           <span className={'value'}>{formatTemperature(data.current.temp, unitType)}</span>
           <img className={'icon'} src={`http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`}/>
