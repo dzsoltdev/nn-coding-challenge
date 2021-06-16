@@ -1,0 +1,46 @@
+.modal-presentation-layer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  position: relative;
+  border: none;
+  outline: 0;
+  border-radius: 6px;
+  padding: 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &.light {
+    background-color: white;
+  }
+
+  &.dark {
+    background-color: #4b4949;
+    color: white;
+
+    .button {
+      border-color: white;
+    }
+  }
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .hint {
+    font-size: 10px;
+    margin-bottom: 16px;
+  }
+
+  .button {
+    border: 1px solid black;
+    border-radius: 2px;
+    padding: 4px;
+    cursor: pointer;
+  }
+}
