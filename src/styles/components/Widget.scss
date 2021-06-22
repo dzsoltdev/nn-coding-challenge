@@ -1,5 +1,9 @@
 .widget {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
   height: 384px;
   width: 384px;
   border-radius: 8px;

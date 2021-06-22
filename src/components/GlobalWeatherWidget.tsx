@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import classNames from "classnames";
 import {getWeatherDataByCity} from "../store/weatherState/weatherActions";
@@ -8,12 +8,13 @@ import {formatTemperature} from "../utility/valueFormatter";
 import moment from "moment";
 import {Modal, Zoom} from '@material-ui/core';
 import {DATA_STATE} from "../store/dataStateConstants";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCog} from "@fortawesome/free-solid-svg-icons/faCog";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import ResponsiveLoader from "./ResponsiveLoader";
 
 import "../styles/components/modal.scss"
+import {useSessionStorage} from "react-use";
 
 const transitionDuration = 500;
 const defaultCycleDuration = 5000;
@@ -39,26 +40,26 @@ const GlobalWeatherWidget = () => {
 
   const [visibleItemIndex, setVisibleItemIndex] = useState(0);
 
-  const [cycleDuration, setCycleDuration] = useState(defaultCycleDuration);
+  const [cycleDuration, setCycleDuration] = useSessionStorage('global-weather-widget-cycle-duration', defaultCycleDuration);
   const [updatedCycleDuration, setUpdatedCycleDuration] = useState<number | null>(null);
-  const handleCyleDurationChange = (duration: string) => {
+  const handleCyleDurationChange = useCallback((duration: string) => {
     setUpdatedCycleDuration(Number(duration) * 1000);
-  }
+  }, []);
 
-  const applyCyleDurationChange = () => {
+  const applyCyleDurationChange = useCallback(() => {
     setCycleDuration(updatedCycleDuration ?? defaultCycleDuration);
     setUpdatedCycleDuration(null);
     setSettingsVisibility(false);
-  }
+  }, [updatedCycleDuration, defaultCycleDuration])
 
   const [isSettingsVisible, setSettingsVisibility] = React.useState(false);
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setSettingsVisibility(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setSettingsVisibility(false);
-  };
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -72,14 +73,14 @@ const GlobalWeatherWidget = () => {
     });
   }, [unitType]);
 
-  const refreshWidget = () => {
+  const refreshWidget = useCallback(() => {
     getWeatherDataByCity(dispatch, {
       units: unitType
     });
-  }
+  }, [unitType]);
 
   return <div className={'weather global'}>
-    {dataState === DATA_STATE.FETCHING && <div className={'loader-container'}><CircularProgress /></div>}
+    {dataState === DATA_STATE.FETCHING && <ResponsiveLoader />}
     {dataState === DATA_STATE.READY && <>
       <div className={'widget-controls'}>
         <span className={'icon'} onClick={handleOpen}><FontAwesomeIcon icon={faCog} size={'sm'}/></span>

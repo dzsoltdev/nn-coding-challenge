@@ -1,12 +1,12 @@
-import React, {useCallback} from "react";
+import React, {useCallback, lazy, Suspense} from "react";
 import classNames from "classnames";
 import "../styles/components/Widget.scss"
 
 import {useAppSettingsContext} from "../utility/appSettingsContext";
 
-//TODO lazy load components
-import LocalWeatherWidget from "./LocalWeatherWidget";
-import GlobalWeatherWidget from "./GlobalWeatherWidget";
+import ResponsiveLoader from "./ResponsiveLoader";
+const LocalWeatherWidget = lazy(() => import('./LocalWeatherWidget'));
+const GlobalWeatherWidget = lazy(() => import('./GlobalWeatherWidget'));
 
 export enum WidgetType {
   LOCAL_WEATHER = 'LOCAL_WEATHER',
@@ -23,8 +23,8 @@ const Widget = (props: WidgetProps) => {
 
   const renderWidgetByType = useCallback(() => {
     switch (type) {
-      case WidgetType.LOCAL_WEATHER: return <LocalWeatherWidget />
-      case WidgetType.GLOBAL_WEATHER: return <GlobalWeatherWidget />
+      case WidgetType.LOCAL_WEATHER: return <Suspense fallback={<ResponsiveLoader />}><LocalWeatherWidget /></Suspense>;
+      case WidgetType.GLOBAL_WEATHER: return <Suspense fallback={<ResponsiveLoader />}><GlobalWeatherWidget /></Suspense>;
       default: return null
     }
   },[type]);

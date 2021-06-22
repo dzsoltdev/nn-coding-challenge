@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useGeolocation} from "react-use";
 import classNames from "classnames";
 import moment from "moment";
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import ResponsiveLoader from "./ResponsiveLoader";
 
 import {getWeatherDataByLocation} from "../store/weatherState/weatherActions";
 import {useAppSettingsContext} from "../utility/appSettingsContext";
@@ -31,16 +31,16 @@ const LocalWeatherWidget = () => {
     });
   }, [location.loading, unitType]);
 
-  const refreshWidget = () => {
+  const refreshWidget = useCallback(() => {
     getWeatherDataByLocation(dispatch, {
       lat: location.latitude,
       lon: location.longitude,
       units: unitType
     }, true);
-  }
+  }, [unitType, location])
 
   return <div className={classNames('weather', 'local')}>
-    {dataState === DATA_STATE.FETCHING && <div className={'loader-container'}><CircularProgress /></div>}
+    {(dataState === DATA_STATE.FETCHING || location.loading) && <ResponsiveLoader />}
     {dataState === DATA_STATE.READY &&
       <>
         <div className={'widget-controls'}>
